@@ -1,0 +1,18 @@
+{
+  "name": "sudoku-app-api",
+  "version": "1.0.0",
+  "description": "Vercel serverless API for the Sudoku app bug-reporting flow",
+  "main": "api/submit-report.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vercel",
+    "serverless",
+    "bug-reporting",
+    "github-api",
+    "sudoku"
+  ],
+  "author": "dadlabs-io",
+  "license": "MIT"
+}
