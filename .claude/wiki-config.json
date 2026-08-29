@@ -1,0 +1,9 @@
+{
+  "_comment": "Thin pointer: this project's knowledge notebook is 'sudoku-app' in the shared registry below. The global /wiki-* tooling reads this from <cwd>/.claude/, looks the notebook up in the registry, and resolves the wiki root. Skills are global (~/.claude). Written 2026-08-20 as part of the docs migration to project-notebooks.",
+  "tool": "claude-code",
+  "project_name": "sudoku-app-api",
+  "notebook": "sudoku-app",
+  "registry": "C:/github.com/project-notebooks/linked-notebooks.json",
+  "skills_install": "global",
+  "bootstrap_source": "C:/github.com/llm-wiki-bootstrap"
+}
