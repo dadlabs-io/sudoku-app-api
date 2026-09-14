@@ -1,0 +1,186 @@
+# CLAUDE.md — sudoku-app-api
+
+Vercel serverless function that turns Sudoku app bug and feature reports into GitHub issues
+
+## What this wiki holds
+
+This is a **unified wiki** — it does both at once (there is no project-type distinction):
+- **Research** — external content (articles, papers, videos) ingested + curated via `/wiki-update` (ad-hoc URL) or `/wiki-cycle` (batched discover → ingest → lint → promote). Lands in `research/`.
+- **Project knowledge** — your own durable decisions, components, architecture, patterns, and gotchas, captured inline as you work (and via `/wrap-up`). Lands in `project/`.
+
+Both live in the four-layer memory model below.
+
+## Where to look
+
+@C:/github.com/project-notebooks/notebooks/sudoku-app/README.md
+@C:/github.com/project-notebooks/notebooks/sudoku-app/how-to/llm-wiki/commands.md
+@C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/_MAP.md
+
+If the user asks for help (any phrasing — "how do I...", "what commands...", "help"), point them at `llm-wiki/how-to/llm-wiki/` — `commands.md` first, then the skill page under `skills/` that fits their question. You already have these loaded.
+
+## Resuming — where we left off (do this on startup)
+
+Active persona: **api** (`sessions/<persona>/` is per persona; this repo shares the `sudoku-app` notebook with its app repo, so it keeps its own `sessions/api/` and never writes the app's `sessions/main/` files).
+
+After this file and auto-memory load, before the first reply, read in order, each **if present**:
+1. `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/sessions/active-context.md` — cross-persona resume pointer
+2. `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/sessions/<persona>/handoff.md`, then `task.md` — goal, state, pending; NOW and QUEUE
+3. Project status doc, if this project keeps one: (none yet — e.g. `project/roadmap.md`)
+
+If `handoff.md` is missing (no wrap-up yet): read the newest journal under `sessions/<persona>/<YYYY-MM>/` if any, else treat the project as new. Journals otherwise stay on demand.
+Open the first reply, whatever the user said, with one paragraph on where we left off and what is next. A project with a Discord bot does its channel catch-up after this read.
+
+Wiki content lives at `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/`, organized into the **four-layer memory model** (icarus integration plan §6). The four layers map 1:1 to classical cognitive memory types:
+
+| Layer | Cognitive analogue | What goes here | Loaded by default? |
+|---|---|---|---|
+| **Working memory** | Working memory (literal) | This conversation — no on-disk location | (always — this is your context) |
+| **`sessions/`** | Episodic + working memory | "What happened when I tried X last Thursday" — per-persona session journals, plus the mutable resume dashboards (`active-context.md`, `<persona>/handoff.md`, `<persona>/task.md`) that `/wrap-up` keeps current | ✅ your own persona's folder |
+| **`project/`** | Semantic memory (internal) | "What I know about THIS thing we're building" — components, decisions, architecture, patterns, troubleshooting, best-practices | ✅ all of it |
+| **`research/`** | Semantic memory (external) | "What I learned from things we ingested" — papers, vendor blogs, library writeups | ❌ only if task explicitly cites it |
+
+Folder structure under `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/`:
+- **`sessions/<persona>/YYYY-MM/`** — per-agent episodic log; immutable once written
+- **`sessions/active-context.md`**, **`sessions/<persona>/{handoff,task}.md`** — the resume dashboards; overwritten in place by `/wrap-up` Step 0.5, read by the Resuming step above
+- **`project/components/`** — modules / classes / systems we've built
+- **`project/decisions/`** — ADR-style decisions with the *why* preserved
+- **`project/architecture/`** — system-level structural rules
+- **`project/patterns/`** — reusable approaches we adopt elsewhere
+- **`project/troubleshooting/`** — bugs + root causes (so we don't re-debug)
+- **`project/best-practices/`** — project-specific conventions
+- **`project/best-practices/framework/`** — meta-framework specs (icarus plan, frontmatter spec, etc.)
+- **`research/active/`** — current / evolving external content
+- **`research/long-term/`** — peer-reviewed / settled external content
+- **`research/tooling/`** — specific tools / libraries / platforms
+
+### Provenance line (project vs research)
+
+Both are semantic memory; the line is **who authored the load-bearing claim**:
+- `project/` = "we authored this, it describes us"
+- `research/` = "we ingested this, it describes the world"
+
+Synthesis docs that cite research to inform a decision live in `project/` because the load-bearing claim is what *we* decided.
+
+### Where staging + raw live
+
+- `C:/github.com/project-notebooks/notebooks/sudoku-app/research/_inbox/proposed/` — staging area for cycle-ingested entries pending promote-review
+- `C:/github.com/project-notebooks/notebooks/sudoku-app/raw/` — immutable raw source files (papers, transcripts) — referenced via `raw_path:` in frontmatter; never edited
+
+## Working rhythm
+
+1. **Start a session**: do the Resuming read above; the MAP is already loaded.
+2. **Look it up before answering**: any "what do we know about X", "have we decided X", or "how does X work here" question gets a `/wiki-search "<query>"` FIRST — the wiki, not your memory, is the source of truth. Answering from memory when the wiki holds the answer is the failure mode this whole system exists to prevent.
+3. **Code + decide + investigate**: regular dev work. **When you observe something durable — a decision the user makes, a constraint they discover, a pattern you settle on, a bug you trace to root cause — file a proposed entry to `llm-wiki/_inbox/proposed/<folder>/<slug>.md` IMMEDIATELY.** Don't wait for `/wrap-up`. Flag it to the user in one sentence so they know it landed. This is the proactive-listener pattern: the agent is the listener, the wiki is the store.
+4. **End of session**: the user runs `/wrap-up` to catch anything the inline filing missed (long sessions, late-emerging patterns).
+5. **Promote**: `/wiki-promote --review` to accept/reject the proposed entries — entries go to `wiki/`, backlinks reciprocate, indexes regenerate.
+
+## What counts as "durable" (for inline filing)
+
+File a proposed entry when ANY of these happen:
+
+- **Decision** — user picks an approach over alternatives. Capture the decision, the alternatives considered, and the deciding factor. Folder: `decisions/`.
+- **Component built** — non-trivial module/class/script the project will keep. Capture its purpose, public interface, key invariants. Folder: `components/`.
+- **Pattern settled** — recurring approach we'll repeat (testing approach, naming convention, error-handling style). Folder: `patterns/`.
+- **Bug traced** — root cause + fix that future-you would want to look up. Folder: `troubleshooting/`.
+- **Architectural constraint** — something we can't change easily that scopes future work. Folder: `architecture/`.
+
+**Don't file**:
+- Speculative ideas the user said "maybe" about
+- Ephemeral discoveries that got immediately undone
+- Things already in the wiki — search `/wiki-search "<query>"` first if unsure
+
+When in doubt, file it — `/wiki-promote --review` is the gate, so a thin entry costs nothing.
+
+### Entry shape (when filing inline)
+
+Use the same frontmatter contract that `/wrap-up` uses, but stamp `origin: inline` so `/wiki-promote --review` can tell who proposed it. Filing happens to `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/research/_inbox/proposed/<category>/<slug>.md` for new entries:
+
+```yaml
+---
+title: "<descriptive title>"
+date: <YYYY-MM-DD>
+source_url: "internal://session/<session-id>"
+raw_path: "(none — self-authored)"
+ingested_by: claude-code
+origin: inline       # who filed this: inline | wrap-up | wiki-update
+tier: self
+confidence: <high|medium|low>
+last_reviewed: <YYYY-MM-DD>
+review_after: <YYYY-MM-DD+90>
+project_type: merged
+category: <component|decision|architecture|pattern|troubleshooting>
+tags: [<project-slug>, <category>, <topic-tags>]
+
+# Optional icarus truth-status fields (set ONLY if applicable):
+# verified: unverified   # default; never set verified='verified' on initial write — use /wiki-verify
+# revises: <slug>        # if this revises an older entry
+# type: <decision|observation|attempt|rollback|review>
+---
+```
+
+Project-class entries (decisions, components, etc.) go to `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/project/<category>/`. Use the four-layer rule:
+- Filing a NEW project entry directly? → `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/project/<category>/<slug>.md` (skip staging)
+- Filing an INGESTED research entry? → `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/research/_inbox/proposed/<slug>.md` (stage for review)
+- Filing a SESSION wrap-up? → `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/sessions/<persona>/<YYYY-MM>/<session-id>.md`
+
+Body sections (skip any that don't apply):
+1. **TL;DR** — 1-2 sentences
+2. **What** — the artifact
+3. **Why** — rationale, alternatives, deciding factor
+4. **How** — code refs, file paths
+5. **Caveats / open questions**
+6. **Related** — links to other wiki entries
+
+## Why no agentmemory / no Docker / no API-key burn
+
+We evaluated the rohitg00/agentmemory + iii-engine path 2026-05-14 and concluded: the infrastructure cost (Docker, three "OFF by default" env vars, upstream issues #138/#143/#308/#338, API-key compression burn at ~$5-20/mo) doesn't justify the marginal value over the proactive-listener pattern. The agent (you) is already in the conversation, already capable of judgment, and already has file-write tools. We just told you to use them. See the agentic-design wiki retrospective for the full reasoning.
+
+## Conventions
+
+(Edit this section as the project's conventions emerge — naming, testing, file layout, etc. Start with whatever you currently know; this is the agent's constitution.)
+
+## Common commands
+
+```bash
+# Search the project wiki
+/wiki-search "<query>"
+
+# Add an external reference (article, doc, video) to the wiki
+/wiki-update <url>
+
+# Wrap up the current session
+/wrap-up
+
+# Promote what's staged
+/wiki-promote --review
+```
+
+## Where memory lives (four-layer model)
+
+| Layer | Cognitive analogue | Where | Loaded by default? |
+|---|---|---|---|
+| **Working memory** | Working memory | Claude Code context window | (always) |
+| **Sessions** | Episodic + working | C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/sessions/<persona>/YYYY-MM/ (journals) + sessions/active-context.md, sessions/<persona>/{handoff,task}.md (dashboards) | ✅ own persona only |
+| **Project** | Semantic (internal — what we built) | C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/project/ | ✅ all |
+| **Research** | Semantic (external — what we ingested) | C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/research/ | ❌ on-demand only |
+| **Raw** | Immutable substrate | C:/github.com/project-notebooks/notebooks/sudoku-app/raw/ | (never loaded — referenced via raw_path) |
+
+The four-layer split is load-bearing: it makes "what to load on session start" structurally clear (sessions + project = default, research = on-demand) instead of needing per-persona reading-list curation.
+
+## When guidance conflicts — precedence
+
+Rules for this project live in several places and will occasionally disagree. Do not average them or pick the friendlier one. Apply this order, and say which rule won:
+
+1. **Framework-contract docs** — entries under `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/project/best-practices/framework/` carrying `framework-contract: true` (the frontmatter spec, the authoring principles, the cycle step contract). Canonical. Every other doc is supposed to link to them, never restate them.
+2. **Skill definitions** — `SKILL.md` files. A skill that restates a contract doc and drifts is a bug: follow the contract doc, flag the skill.
+3. **This CLAUDE.md** and the project's `llm-wiki/how-to/` docs.
+4. **Memory and session notes** — `sessions/`, agent memory. Background, never authority.
+
+Mechanical enforcement outranks prose at every level: if a lint check or a script gate rejects something a doc permits, the gate is right until the rule inside the gate is changed. (Added 2026-09-02 after an ingest hit two docs defining `confidence` differently with nothing saying which won.)
+
+## Don't
+
+- Don't answer questions about prior decisions, research, or project history from memory — `/wiki-search` first (Working rhythm step 2).
+- Don't paste session transcripts into wiki entries — `/wrap-up` distills them. Transcripts go to `C:/github.com/project-notebooks/notebooks/sudoku-app/raw/sessions/`.
+- Don't promote directly to `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/` — always stage in `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/_inbox/proposed/` and let `/wiki-promote` move them.
+- Don't edit `_MAP.md` or `_INDEX.md` by hand — they're auto-generated.
