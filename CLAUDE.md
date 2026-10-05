@@ -16,7 +16,7 @@ Both live in the four-layer memory model below.
 @C:/github.com/project-notebooks/notebooks/global-toolset/how-to/llm-wiki/commands.md
 @C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/_MAP.md
 
-If the user asks for help (any phrasing — "how do I...", "what commands...", "help"), point them at the global toolset's `C:/github.com/project-notebooks/notebooks/global-toolset/how-to/llm-wiki/` — `commands.md` first, then the skill page under `skills/` that fits their question. You already have these loaded.
+If the user asks for help (any phrasing — "how do I...", "what commands...", "help"), point them at the global toolset, `C:/github.com/project-notebooks/notebooks/global-toolset/README.md`, which lists every installed pack; for this wiki's own tools, `C:/github.com/project-notebooks/notebooks/global-toolset/how-to/llm-wiki/` — `commands.md` first, then the skill page under `skills/` that fits their question. You already have these loaded.
 
 ## Resuming — where we left off (do this on startup)
 
@@ -173,7 +173,7 @@ Rules for this project live in several places and will occasionally disagree. Do
 
 1. **Framework-contract docs** — the docs under `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/project/best-practices/framework/` (the global toolset) carrying `framework-contract: true` (the frontmatter spec, the authoring principles, the cycle step contract). Canonical. Every other doc is supposed to link to them, never restate them.
 2. **Skill definitions** — `SKILL.md` files. A skill that restates a contract doc and drifts is a bug: follow the contract doc, flag the skill.
-3. **This CLAUDE.md** and the project's `llm-wiki/how-to/` docs.
+3. **This CLAUDE.md** and the usage docs in `C:/github.com/project-notebooks/notebooks/global-toolset/how-to/`.
 4. **Memory and session notes** — `sessions/`, agent memory. Background, never authority.
 
 Mechanical enforcement outranks prose at every level: if a lint check or a script gate rejects something a doc permits, the gate is right until the rule inside the gate is changed. (Added 2026-09-02 after an ingest hit two docs defining `confidence` differently with nothing saying which won.)
