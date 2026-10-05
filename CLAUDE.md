@@ -13,10 +13,10 @@ Both live in the four-layer memory model below.
 ## Where to look
 
 @C:/github.com/project-notebooks/notebooks/sudoku-app/README.md
-@C:/github.com/project-notebooks/notebooks/sudoku-app/how-to/llm-wiki/commands.md
+@C:/github.com/project-notebooks/notebooks/global-toolset/how-to/llm-wiki/commands.md
 @C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/_MAP.md
 
-If the user asks for help (any phrasing — "how do I...", "what commands...", "help"), point them at `llm-wiki/how-to/llm-wiki/` — `commands.md` first, then the skill page under `skills/` that fits their question. You already have these loaded.
+If the user asks for help (any phrasing — "how do I...", "what commands...", "help"), point them at the global toolset's `C:/github.com/project-notebooks/notebooks/global-toolset/how-to/llm-wiki/` — `commands.md` first, then the skill page under `skills/` that fits their question. You already have these loaded.
 
 ## Resuming — where we left off (do this on startup)
 
@@ -48,7 +48,7 @@ Folder structure under `C:/github.com/project-notebooks/notebooks/sudoku-app/wik
 - **`project/patterns/`** — reusable approaches we adopt elsewhere
 - **`project/troubleshooting/`** — bugs + root causes (so we don't re-debug)
 - **`project/best-practices/`** — project-specific conventions
-- **`project/best-practices/framework/`** — meta-framework specs (icarus plan, frontmatter spec, etc.)
+- the framework-contract docs (frontmatter spec, authoring principles, cycle contract) live once, in `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/project/best-practices/framework/`
 - **`research/active/`** — current / evolving external content
 - **`research/long-term/`** — peer-reviewed / settled external content
 - **`research/tooling/`** — specific tools / libraries / platforms
@@ -171,7 +171,7 @@ The four-layer split is load-bearing: it makes "what to load on session start" s
 
 Rules for this project live in several places and will occasionally disagree. Do not average them or pick the friendlier one. Apply this order, and say which rule won:
 
-1. **Framework-contract docs** — entries under `C:/github.com/project-notebooks/notebooks/sudoku-app/wiki/project/best-practices/framework/` carrying `framework-contract: true` (the frontmatter spec, the authoring principles, the cycle step contract). Canonical. Every other doc is supposed to link to them, never restate them.
+1. **Framework-contract docs** — the docs under `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/project/best-practices/framework/` (the global toolset) carrying `framework-contract: true` (the frontmatter spec, the authoring principles, the cycle step contract). Canonical. Every other doc is supposed to link to them, never restate them.
 2. **Skill definitions** — `SKILL.md` files. A skill that restates a contract doc and drifts is a bug: follow the contract doc, flag the skill.
 3. **This CLAUDE.md** and the project's `llm-wiki/how-to/` docs.
 4. **Memory and session notes** — `sessions/`, agent memory. Background, never authority.
