@@ -48,7 +48,7 @@ Folder structure under `C:/github.com/project-notebooks/notebooks/sudoku-app/wik
 - **`project/patterns/`** — reusable approaches we adopt elsewhere
 - **`project/troubleshooting/`** — bugs + root causes (so we don't re-debug)
 - **`project/best-practices/`** — project-specific conventions
-- the framework-contract docs (frontmatter spec, authoring principles, cycle contract) live once, in `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/project/best-practices/framework/`
+- the framework-contract docs (frontmatter spec, authoring principles, cycle contract) live once, in `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/best-practices/framework/`
 - **`research/active/`** — current / evolving external content
 - **`research/long-term/`** — peer-reviewed / settled external content
 - **`research/tooling/`** — specific tools / libraries / platforms
@@ -171,7 +171,7 @@ The four-layer split is load-bearing: it makes "what to load on session start" s
 
 Rules for this project live in several places and will occasionally disagree. Do not average them or pick the friendlier one. Apply this order, and say which rule won:
 
-1. **Framework-contract docs** — the docs under `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/project/best-practices/framework/` (the global toolset) carrying `framework-contract: true` (the frontmatter spec, the authoring principles, the cycle step contract). Canonical. Every other doc is supposed to link to them, never restate them.
+1. **Framework-contract docs** — the docs under `C:/github.com/project-notebooks/notebooks/global-toolset/wiki/best-practices/framework/` (the global toolset) carrying `framework-contract: true` (the frontmatter spec, the authoring principles, the cycle step contract). Canonical. Every other doc is supposed to link to them, never restate them. A project's own changes to one of them go in `wiki/best-practices/local/<doc name>`, never in the doc; read it after the framework doc (the doc's "Local changes" line says in what order).
 2. **Skill definitions** — `SKILL.md` files. A skill that restates a contract doc and drifts is a bug: follow the contract doc, flag the skill.
 3. **This CLAUDE.md** and the usage docs in `C:/github.com/project-notebooks/notebooks/global-toolset/how-to/`.
 4. **Memory and session notes** — `sessions/`, agent memory. Background, never authority.
